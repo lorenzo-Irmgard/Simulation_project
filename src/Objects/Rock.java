@@ -1,10 +1,9 @@
 package Objects;
 
 public class Rock extends Entity{
-    private static final int ID = 3;
-    private static final String ICON = "⛰️";
+    private final static String ICON = "\u26F0\uFE0F";
 
     public Rock() {
-        super(ID, ICON);
+        super(ICON);
     }
 }

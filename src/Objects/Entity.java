@@ -1,28 +1,14 @@
 package Objects;
 
 public abstract class Entity {
-    private final int ID;
     private final String ICON;
-    private int[] coordinates;
 
-    protected Entity(int id, String icon) {
-        this.ID = id;
-        this.ICON = icon;
+    public Entity(String ICON) {
+        this.ICON = ICON;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public String getICON() {
+    @Override
+    public String toString() {
         return ICON;
-    }
-
-    public int[] getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(int[] coordinates) {
-        this.coordinates = coordinates;
     }
 }
