@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 public class Simulation {
     private static int count;
-    private static Scanner scan = new Scanner(System.in);
+    private static final Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
         startSimulation();
@@ -41,8 +41,8 @@ public class Simulation {
     }
 
     private static void fieldRender(MyMap map) {
-        for (int i = -1; i < 26; i++) {
-            for (int j = -1; j < 51; j++) {
+        for (int i = -1; i < map.getHEIGHT() + 1; i++) {
+            for (int j = -1; j < map.getWIDTH() + 1; j++) {
                 Position pos = new Position(j, i);
                 if (j < 0 || j == 50) {
                     System.out.print("|");
