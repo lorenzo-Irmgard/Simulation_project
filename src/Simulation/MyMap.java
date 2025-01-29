@@ -2,13 +2,14 @@ package Simulation;
 
 import Objects.Entity;
 import Objects.Position;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 
 public class MyMap {
     private Map<Position, Entity> map;
     private final int WIDTH = 50;
     private final int HEIGHT = 25;
+    private final List<Position> neighbors = new ArrayList<>();
 
     public int getWIDTH() {
         return WIDTH;
@@ -18,8 +19,16 @@ public class MyMap {
         return HEIGHT;
     }
 
+    public List<Position> getNeighbors() {
+        return neighbors;
+    }
+
     public MyMap() {
         map = new HashMap<>();
+        neighbors.add(new Position(0, 1));
+        neighbors.add(new Position(0, -1));
+        neighbors.add(new Position(1, 0));
+        neighbors.add(new Position(-1, 0));
     }
 
     public void addEntity(Position pos, Entity ent) {
@@ -32,6 +41,10 @@ public class MyMap {
 
     public Entity getEntity(Position pos) {
         return map.get(pos);
+    }
+
+    public Set<Map.Entry<Position, Entity>> getEntry() {
+        return map.entrySet();
     }
 
     public boolean contains(Position pos) {

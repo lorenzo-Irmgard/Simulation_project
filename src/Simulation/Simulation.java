@@ -13,10 +13,12 @@ Lion:🦁
 Eagle: 🦅
  */
 
+import Objects.Entity;
 import Objects.Grass;
 import Objects.Herbivore;
 import Objects.Position;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class Simulation {
@@ -28,13 +30,21 @@ public class Simulation {
     }
 
     private static void startSimulation() {
-        count = 0;
+       count = 0;
         MyMap map = new MyMap();
         initEntity(map);
         while (true) {
+            Position pos;
             fieldRender(map);
             if (scan.nextLine().equals("e")) {
                 break;
+            }
+            for (Map.Entry<Position, Entity> entr : map.getEntry()) { //TODO исправить, не работает!
+                if (entr.getValue().getClass() == Herbivore.class) { //TODO Пересмотреть видео из обучалки по джава, про изменение коллекций в цикле
+                    Herbivore herb = (Herbivore) entr.getValue();
+                    map.removeEntity(entr.getKey());
+                    map.addEntity(herb.makeMove(map, entr.getKey()), herb);
+                }
             }
             count++;
         }
@@ -44,9 +54,9 @@ public class Simulation {
         for (int i = -1; i < map.getHEIGHT() + 1; i++) {
             for (int j = -1; j < map.getWIDTH() + 1; j++) {
                 Position pos = new Position(j, i);
-                if (j < 0 || j == 50) {
+                if (j < 0 || j == map.getWIDTH()) {
                     System.out.print("|");
-                } else if (i < 0 || i == 25) {
+                } else if (i < 0 || i == map.getHEIGHT()) {
                     System.out.print("----");
                 } else if (map.contains(pos)) {
                     System.out.print(" " + map.getEntity(pos) + " ");
@@ -61,6 +71,6 @@ public class Simulation {
 
     private static void initEntity(MyMap map) {
         map.addEntity(new Position(1, 0), new Herbivore());
-        map.addEntity(new Position(0,0), new Grass());
+        map.addEntity(new Position(49,24), new Grass());
     }
 }

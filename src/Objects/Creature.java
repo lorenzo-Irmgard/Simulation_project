@@ -1,16 +1,12 @@
 package Objects;
 import Simulation.MyMap;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class Creature extends Entity{
     private final int SPEED;
     private int health;
-    protected Position targetPosition;
     private final Predicate<Entity> TARGETCLASS;
 
     protected Creature (int speed, int health, String ICON, Predicate<Entity> targetClass) {
@@ -33,30 +29,73 @@ public abstract class Creature extends Entity{
     }
 
     public Position makeMove(MyMap map, Position startPos) {
+        if (targetCheck(startPos, map)) {
+            //метод eat
+            return startPos;
+        }
+        return findTarget(startPos, map);
+    }
+
+    private Position findTarget(Position startPos, MyMap map) {
+        Queue<Position> toCheck = new LinkedList<>();
+        Map<Position, Position> history = new HashMap<>();
+        Stack<Position> path;
         Position nextPos = startPos;
-        switch (targetCheck(startPos, map)) {
-            case 0:
-                System.out.println("eating");
+        toCheck.add(startPos);
+        history.put(startPos, null);
+        while (!toCheck.isEmpty()) {
+            Position current = toCheck.poll();
+
+            if (targetCheck(current, map)) {
+                path = restorePath(history, current);
+                for (int i = 0; i < SPEED; i++) {
+                    nextPos = path.pop();
+                }
                 break;
-            case 1:
-                nextPos = moveToTarget(startPos);
-                break;
-            case 2:
-                findTarget(startPos, map);
-                nextPos = moveToTarget(startPos);
-                break;
+            }
+
+            for(Position p : map.getNeighbors()) {
+                Position neighbor = new Position(current.getX() + p.getX(), current.getY() + p.getY());
+                if (map.validPositionCheck(neighbor) && !history.containsKey(neighbor) && !map.contains(neighbor)) {
+                    toCheck.add(neighbor);
+                    history.put(neighbor, current);
+                }
+            }
         }
         return nextPos;
     }
 
-    private Position moveToTarget(Position startPos) {
-        return startPos;
+    private boolean targetCheck(Position pos, MyMap map) {
+        for (Position p : map.getNeighbors()) {
+            Position check = new Position(pos.getX() + p.getX(), pos.getY() + p.getY());
+            if (map.contains(check) && TARGETCLASS.test(map.getEntity(check))) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    void findTarget(Position startPos, MyMap map) {
+    private Stack<Position> restorePath(Map<Position, Position> history, Position end) {
+        Stack<Position> path = new Stack<>();
+        while (history.get(end) != null) {
+            path.push(end);
+            end = history.get(end);
+        }
+        return path;
+    }
+}
+
+
+
+
+
+/*
+void findTarget(Position startPos, MyMap map) {
         Queue<Position> toCheck = new LinkedList<>();
         List<Position> checked = new LinkedList<>();
+//        Map<Position, Position> path = new HashMap<>();
         toCheck.add(startPos);
+//        path.put(startPos, null);
         while (!toCheck.isEmpty()) {
             Position current = toCheck.remove();
             if (checked.contains(current)) continue;
@@ -80,23 +119,4 @@ public abstract class Creature extends Entity{
             }
         }
     }
-
-    int targetCheck(Position pos, MyMap map) {
-        List<Position> roundPos = new ArrayList<>();
-
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (i != 0 && j != 0) {
-                    Position p = new Position(pos.getX() + i, pos.getY() + j);
-                    if (map.validPositionCheck(p)) roundPos.add(p);
-                }
-            }
-        }
-
-        if (map.contains(targetPosition) && TARGETCLASS.test(map.getEntity(targetPosition))) {
-            if (roundPos.contains(targetPosition)) return 0;
-            return 1;
-        }
-        return 2;
-    }
-}
+ */
