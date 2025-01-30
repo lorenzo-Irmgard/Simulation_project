@@ -13,13 +13,9 @@ Lion:🦁
 Eagle: 🦅
  */
 
-import Objects.Entity;
-import Objects.Grass;
-import Objects.Herbivore;
-import Objects.Position;
+import Objects.*;
 
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Simulation {
     private static int count;
@@ -30,21 +26,31 @@ public class Simulation {
     }
 
     private static void startSimulation() {
-       count = 0;
+        count = 0;
         MyMap map = new MyMap();
         initEntity(map);
         while (true) {
-            Position pos;
+            List<Position> toRemove = new ArrayList<>();
+            Map<Position, Entity> toAdd = new HashMap<>();
             fieldRender(map);
             if (scan.nextLine().equals("e")) {
                 break;
             }
-            for (Map.Entry<Position, Entity> entr : map.getEntry()) { //TODO исправить, не работает!
-                if (entr.getValue().getClass() == Herbivore.class) { //TODO Пересмотреть видео из обучалки по джава, про изменение коллекций в цикле
+            for (Map.Entry<Position, Entity> entr : map.getEntry()) {
+                if (entr.getValue().getClass() == Herbivore.class) {
                     Herbivore herb = (Herbivore) entr.getValue();
-                    map.removeEntity(entr.getKey());
-                    map.addEntity(herb.makeMove(map, entr.getKey()), herb);
+                    Position np = herb.makeMove(map, entr.getKey());
+
+                    toRemove.add(entr.getKey());
+                    toAdd.put(np, herb);
                 }
+            }
+
+            for (Position p : toRemove) {
+                map.removeEntity(p);
+            }
+            for (Map.Entry<Position, Entity> entr : toAdd.entrySet()) {
+                map.addEntity(entr.getKey(), entr.getValue());
             }
             count++;
         }
@@ -70,7 +76,14 @@ public class Simulation {
     }
 
     private static void initEntity(MyMap map) {
-        map.addEntity(new Position(1, 0), new Herbivore());
+        map.addEntity(new Position(0, 0), new Herbivore());
+        for (int i = 0; i < map.getHEIGHT(); i++) {
+            if (i != 12) {
+                map.addEntity(new Position(25, i), new Rock());
+            }
+        }
         map.addEntity(new Position(49,24), new Grass());
+
+
     }
 }

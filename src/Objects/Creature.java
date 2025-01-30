@@ -47,9 +47,12 @@ public abstract class Creature extends Entity{
             Position current = toCheck.poll();
 
             if (targetCheck(current, map)) {
+                System.out.println("in findTarget" + current);
                 path = restorePath(history, current);
-                for (int i = 0; i < SPEED; i++) {
+                int cnt = 0;
+                while (cnt < SPEED && !path.empty()) {
                     nextPos = path.pop();
+                    cnt++;
                 }
                 break;
             }
@@ -69,6 +72,7 @@ public abstract class Creature extends Entity{
         for (Position p : map.getNeighbors()) {
             Position check = new Position(pos.getX() + p.getX(), pos.getY() + p.getY());
             if (map.contains(check) && TARGETCLASS.test(map.getEntity(check))) {
+                System.out.println("in targetcheck" + pos);
                 return true;
             }
         }

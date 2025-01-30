@@ -26,8 +26,8 @@ public class MyMap {
     public MyMap() {
         map = new HashMap<>();
         neighbors.add(new Position(0, 1));
-        neighbors.add(new Position(0, -1));
         neighbors.add(new Position(1, 0));
+        neighbors.add(new Position(0, -1));
         neighbors.add(new Position(-1, 0));
     }
 
