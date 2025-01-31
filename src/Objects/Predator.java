@@ -2,7 +2,7 @@ package Objects;
 
 public class Predator extends Creature{
     private static final int START_HEALTH = 4;
-    private static final int SPEED = 4;
+    private static final int SPEED = 5;
     private static final String ICON = "\uD83D\uDC3A";
 
     public Predator() {

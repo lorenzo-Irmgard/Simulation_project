@@ -2,7 +2,7 @@ package Objects;
 
 public class Herbivore extends Creature {
     private static final int START_HEALTH = 4;
-    private static final int SPEED = 4;
+    private static final int SPEED = 2;
     private static final String ICON = "\uD83E\uDD8C";
 
     public Herbivore() {

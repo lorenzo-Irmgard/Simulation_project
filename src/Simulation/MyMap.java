@@ -15,6 +15,10 @@ public class MyMap {
         return WIDTH;
     }
 
+    public Set<Position> getPositions() {
+        return map.keySet();
+    }
+
     public int getHEIGHT() {
         return HEIGHT;
     }
