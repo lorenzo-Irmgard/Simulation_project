@@ -8,6 +8,7 @@ public abstract class Creature extends Entity{
     private final int SPEED;
     private int health;
     private final Predicate<Entity> TARGETCLASS;
+    protected Position targetPos;
 
     protected Creature (int speed, int health, String ICON, Predicate<Entity> targetClass) {
         super(ICON);
@@ -30,11 +31,13 @@ public abstract class Creature extends Entity{
 
     public Position makeMove(MyMap map, Position startPos) {
         if (targetCheck(startPos, map)) {
-            //метод eat
+            bite(map);
             return startPos;
         }
         return findTarget(startPos, map);
     }
+
+    public abstract void bite(MyMap map);
 
     private Position findTarget(Position startPos, MyMap map) {
         Queue<Position> toCheck = new LinkedList<>();
@@ -71,6 +74,7 @@ public abstract class Creature extends Entity{
         for (Position p : map.getNeighbors()) {
             Position check = new Position(pos.getX() + p.getX(), pos.getY() + p.getY());
             if (map.contains(check) && TARGETCLASS.test(map.getEntity(check))) {
+                targetPos = check;
                 return true;
             }
         }

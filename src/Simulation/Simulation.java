@@ -13,6 +13,12 @@ Lion:🦁
 Eagle: 🦅
  */
 
+import Actions.Action;
+import Actions.initActions.placePreds;
+import Actions.initActions.placeGrass;
+import Actions.initActions.placeHerbs;
+import Actions.initActions.placeObjects;
+import Actions.turnActions.moveAction;
 import Objects.*;
 
 import java.util.*;
@@ -29,7 +35,14 @@ public class Simulation {
             int ans = inputCheck();
             if (count == 0 && ans > 0 && ans < 6) {
                 map = new MyMap();
-                initEntity();
+                Action ini = new placeObjects();
+                Action gr = new placeGrass();
+                Action ct = new placePreds();
+                Action hb = new placeHerbs();
+                ini.operation(map);
+                gr.operation(map);
+                ct.operation(map);
+                hb.operation(map);
                 //инициирующие действия
             }
             exitCode = menuSelection(ans);
@@ -120,28 +133,15 @@ public class Simulation {
     }
 
     private static void nextTurn() {
-        List<Map.Entry<Position, Entity>> creatures = new ArrayList<>(map.getEntry());
-
-        for (Map.Entry<Position, Entity> entry : creatures) {
-            Entity entity = entry.getValue();
-            Position oldPos = entry.getKey();
-
-            if (entity instanceof Herbivore || entity instanceof Predator) {
-                Creature creature = (Creature) entity;
-                Position newPos = creature.makeMove(map, oldPos);
-                if (!oldPos.equals(newPos)) {
-                    map.removeEntity(oldPos);
-                    map.addEntity(newPos, creature);
-                }
-            }
-        }
+        Action mv = new moveAction();
+        mv.operation(map);
         fieldRender();
     }
 
 
     private static void fieldRender() {
-        for (int i = -1; i < map.getHEIGHT() + 1; i++) {
-            for (int j = -1; j < map.getWIDTH() + 1; j++) {
+        for (int i = -1; i <= map.getHEIGHT(); i++) {
+            for (int j = -1; j <= map.getWIDTH(); j++) {
                 Position pos = new Position(j, i);
                 if (j < 0 || j == map.getWIDTH()) {
                     System.out.print("|");
@@ -155,18 +155,6 @@ public class Simulation {
             }
             System.out.println();
         }
-    }
-
-    private static void initEntity() {
-        map.addEntity(new Position(0, 0), new Herbivore());
-        map.addEntity(new Position(49, 0), new Predator());
-        for (int i = 0; i < map.getHEIGHT(); i++) {
-            if (i != 12) {
-                map.addEntity(new Position(25, i), new Rock());
-            }
-        }
-        map.addEntity(new Position(49,24), new Grass());
-
     }
 
     private static boolean pauseSimulation() {
