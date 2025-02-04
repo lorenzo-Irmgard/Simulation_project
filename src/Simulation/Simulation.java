@@ -133,7 +133,6 @@ public class Simulation {
         for(Action act : turnActions) {
             act.operation(map);
         }
-//        fieldRender();
     }
 
     public static void fieldRender(int moveNum) {
