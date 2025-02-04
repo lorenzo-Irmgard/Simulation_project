@@ -1,21 +1,19 @@
 package Actions.initActions;
 
-import Actions.spawnAction;
+import Actions.SpawnAction;
 import Objects.Predator;
 import Simulation.MyMap;
 
 import java.util.Random;
 
-public class placePreds extends spawnAction {
+public class PlacePreds extends SpawnAction {
 
     @Override
     public void operation(MyMap map) {
-        int place = map.getWIDTH() * map.getHEIGHT();
-        Random rand = new Random();
-        int count = place / 200;
+        int count = map.getHerbsCount()/2;
         for (int i = 0; i < count; i++) {
             map.addEntity(getValidPosition(map), new Predator());
-            map.setPredsCount(map.getPredsCount() + 1);
+            map.addPredsCount();
         }
     }
 }

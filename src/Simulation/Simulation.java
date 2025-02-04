@@ -14,11 +14,14 @@ Eagle: 🦅
  */
 
 import Actions.Action;
-import Actions.initActions.placePreds;
-import Actions.initActions.placeGrass;
-import Actions.initActions.placeHerbs;
-import Actions.initActions.placeObjects;
-import Actions.turnActions.moveAction;
+import Actions.initActions.PlacePreds;
+import Actions.initActions.PlaceGrass;
+import Actions.initActions.PlaceHerbs;
+import Actions.initActions.PlaceObjects;
+import Actions.turnActions.AddPreds;
+import Actions.turnActions.AddGrass;
+import Actions.turnActions.AddHerbs;
+import Actions.turnActions.MoveAction;
 import Objects.*;
 
 import java.util.*;
@@ -27,7 +30,7 @@ public class Simulation {
     private static int count = 0;
     private static final Scanner scan = new Scanner(System.in);
     private static MyMap map;
-
+    private static final List<Action> turnActions = new ArrayList<>();
     public static void main(String[] args) {
         int exitCode = 0;
         while (exitCode != 1) {
@@ -35,15 +38,11 @@ public class Simulation {
             int ans = inputCheck();
             if (count == 0 && ans > 0 && ans < 6) {
                 map = new MyMap();
-                Action ini = new placeObjects();
-                Action gr = new placeGrass();
-                Action ct = new placePreds();
-                Action hb = new placeHerbs();
-                ini.operation(map);
-                gr.operation(map);
-                ct.operation(map);
-                hb.operation(map);
-                //инициирующие действия
+                List<Action> initActions = new ArrayList<>();
+                initialize(initActions, turnActions);
+                for(Action act : initActions) {
+                    act.operation(map);
+                }
             }
             exitCode = menuSelection(ans);
         }
@@ -64,15 +63,16 @@ public class Simulation {
     }
 
     private static void printMenu() {
-        if (count == 0) System.out.println("╔═══╗╔══╗╔═╗╔═╗╔╗─╔╗╔╗───╔═══╗╔════╗╔══╗╔═══╗╔═╗─╔╗\n" +
-                                           "║╔═╗║╚╣─╝║║╚╝║║║║─║║║║───║╔═╗║║╔╗╔╗║╚╣─╝║╔═╗║║║╚╗║║\n" +
-                                           "║╚══╗─║║─║╔╗╔╗║║║─║║║║───║║─║║╚╝║║╚╝─║║─║║─║║║╔╗╚╝║\n" +
-                                           "╚══╗║─║║─║║║║║║║║─║║║║─╔╗║╚═╝║──║║───║║─║║─║║║║╚╗║║\n" +
-                                           "║╚═╝║╔╣─╗║║║║║║║╚═╝║║╚═╝║║╔═╗║──║║──╔╣─╗║╚═╝║║║─║║║\n" +
-                                           "╚═══╝╚══╝╚╝╚╝╚╝╚═══╝╚═══╝╚╝─╚╝──╚╝──╚══╝╚═══╝╚╝─╚═╝");
+        if (count == 0) System.out.println("""
+                ╔═══╗╔══╗╔═╗╔═╗╔╗─╔╗╔╗───╔═══╗╔════╗╔══╗╔═══╗╔═╗─╔╗
+                ║╔═╗║╚╣─╝║║╚╝║║║║─║║║║───║╔═╗║║╔╗╔╗║╚╣─╝║╔═╗║║║╚╗║║
+                ║╚══╗─║║─║╔╗╔╗║║║─║║║║───║║─║║╚╝║║╚╝─║║─║║─║║║╔╗╚╝║
+                ╚══╗║─║║─║║║║║║║║─║║║║─╔╗║╚═╝║──║║───║║─║║─║║║║╚╗║║
+                ║╚═╝║╔╣─╗║║║║║║║╚═╝║║╚═╝║║╔═╗║──║║──╔╣─╗║╚═╝║║║─║║║
+                ╚═══╝╚══╝╚╝╚╝╚╝╚═══╝╚═══╝╚╝─╚╝──╚╝──╚══╝╚═══╝╚╝─╚═╝""");
         System.out.println("МЕНЮ:");
         System.out.println("1. Запустить симуляцию на 1 ход");
-        System.out.println("2. Запустить симуляцию на 10 ходов");
+        System.out.println("2. Запустить симуляцию на 50 ходов");
         System.out.println("3. Ввести количество ходов и запустить симуляцию");
         System.out.println("4. Запустить бесконечную симуляцию");
         System.out.println("5. Начать новую симуляцию");
@@ -88,7 +88,7 @@ public class Simulation {
                 count++;
                 break;
             case 2:
-                startSimulation(10);
+                startSimulation(50);
                 break;
             case 3:
                 int num;
@@ -124,22 +124,19 @@ public class Simulation {
                 if (pauseSimulation()) break;
                 stopNumber += stopNumber;
             }
-            if (scan.nextLine().equals("e")) {
-                break;
-            }
             nextTurn();
             count++;
         }
     }
 
     private static void nextTurn() {
-        Action mv = new moveAction();
-        mv.operation(map);
-        fieldRender();
+        for(Action act : turnActions) {
+            act.operation(map);
+        }
+//        fieldRender();
     }
 
-
-    private static void fieldRender() {
+    public static void fieldRender(int moveNum) {
         for (int i = -1; i <= map.getHEIGHT(); i++) {
             for (int j = -1; j <= map.getWIDTH(); j++) {
                 Position pos = new Position(j, i);
@@ -155,6 +152,8 @@ public class Simulation {
             }
             System.out.println();
         }
+        System.out.println("______________\n|Round||Move |   Herbivores left: " + map.getHerbsCount());
+                System.out.printf("|%-5d||%-5d|   Predators left: %d", count, moveNum, map.getPredsCount());
     }
 
     private static boolean pauseSimulation() {
@@ -164,7 +163,6 @@ public class Simulation {
             System.out.println("Вы желаете продолжить?");
             System.out.println("1. Да");
             System.out.println("2. Нет");
-            System.out.println("Введите номер желаемого пункта меню:");
             ans = inputCheck();
             if (ans == 1) {
                 return false;
@@ -174,5 +172,16 @@ public class Simulation {
                 System.out.println("Некорректный ввод. Введи цифру соответсвующую пункту меню");
             }
         }
+    }
+
+    private static void initialize(List<Action> initActions, List<Action> turnActions) {
+        initActions.add(new PlaceGrass());
+        initActions.add(new PlaceHerbs());
+        initActions.add(new PlaceObjects());
+        initActions.add(new PlacePreds());
+        turnActions.add(new MoveAction());
+        turnActions.add(new AddHerbs());
+        turnActions.add(new AddGrass());
+        turnActions.add(new AddPreds());
     }
 }

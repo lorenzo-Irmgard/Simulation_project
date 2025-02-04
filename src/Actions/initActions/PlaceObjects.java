@@ -1,13 +1,13 @@
 package Actions.initActions;
 
-import Actions.spawnAction;
+import Actions.SpawnAction;
 import Objects.Rock;
 import Objects.Tree;
 import Simulation.MyMap;
 
 import java.util.Random;
 
-public class placeObjects extends spawnAction {
+public class PlaceObjects extends SpawnAction {
     @Override
     public void operation(MyMap map) {
         int place = map.getWIDTH() * map.getHEIGHT();

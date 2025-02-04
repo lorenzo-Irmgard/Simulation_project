@@ -17,9 +17,6 @@ public abstract class Creature extends Entity{
         this.TARGETCLASS = targetClass;
     }
 
-    public int getSPEED() {
-        return SPEED;
-    }
 
     public int getHealth() {
         return health;
@@ -36,6 +33,8 @@ public abstract class Creature extends Entity{
         }
         return findTarget(startPos, map);
     }
+
+    public abstract String printStatus();
 
     public abstract void bite(MyMap map);
 

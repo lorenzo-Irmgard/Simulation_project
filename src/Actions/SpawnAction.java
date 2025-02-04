@@ -5,7 +5,7 @@ import Simulation.MyMap;
 
 import java.util.Random;
 
-public abstract class spawnAction extends Action {
+public abstract class SpawnAction extends Action {
     public Position getValidPosition(MyMap map) {
         Random rand = new Random();
         while (true) {

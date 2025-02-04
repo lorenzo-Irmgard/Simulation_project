@@ -6,44 +6,52 @@ import Objects.Position;
 import java.util.*;
 
 public class MyMap {
-    private Map<Position, Entity> map;
-    private final int WIDTH = 50;
-    private final int HEIGHT = 25;
+    private final Map<Position, Entity> map;
+    private final int WIDTH = 30;
+    private final int HEIGHT = 20;
     private final List<Position> neighbors = new ArrayList<>();
     private int herbsCount = 0;
-    private int predsCount = 0;
     private int grassCount = 0;
+    private int predsCount = 0;
 
     public int getWIDTH() {
         return WIDTH;
-    }
-
-    public void setGrassCount(int grassCount) {
-        this.grassCount = grassCount;
-    }
-
-    public void setPredsCount(int predsCount) {
-        this.predsCount = predsCount;
-    }
-
-    public void setHerbsCount(int herbsCount) {
-        this.herbsCount = herbsCount;
     }
 
     public int getHerbsCount() {
         return herbsCount;
     }
 
-    public int getPredsCount() {
-        return predsCount;
-    }
-
     public int getGrassCount() {
         return grassCount;
     }
 
-    public Set<Position> getPositions() {
-        return map.keySet();
+    public int getPredsCount() {
+        return predsCount;
+    }
+
+    public void addGrassCount() {
+        grassCount += 1;
+    }
+
+    public void addHerbsCount() {
+        herbsCount += 1;
+    }
+
+    public void addPredsCount() {
+        predsCount += 1;
+    }
+
+    public void subGrassCount() {
+        grassCount -= 1;
+    }
+
+    public void subPredsCount() {
+        predsCount -= 1;
+    }
+
+    public void subHerbsCount() {
+        herbsCount -= 1;
     }
 
     public int getHEIGHT() {
