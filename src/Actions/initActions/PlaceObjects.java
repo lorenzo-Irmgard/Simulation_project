@@ -10,9 +10,8 @@ import java.util.Random;
 public class PlaceObjects extends SpawnAction {
     @Override
     public void operation(MyMap map) {
-        int place = map.getWIDTH() * map.getHEIGHT();
         Random rand = new Random();
-        int count = place / 14;
+        int count = (map.getWIDTH() * map.getHEIGHT()) / 14;
         for (int i = 0; i < count; i++) {
             if (rand.nextInt(1, 3) == 1) {
                 map.addEntity(getValidPosition(map), new Tree());
