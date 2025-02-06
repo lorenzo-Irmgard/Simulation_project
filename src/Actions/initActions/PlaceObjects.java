@@ -2,7 +2,6 @@ package Actions.initActions;
 
 import Actions.SpawnAction;
 import Objects.Entity;
-import Objects.Predator;
 import Objects.Rock;
 import Objects.Tree;
 import Simulation.MyMap;

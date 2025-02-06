@@ -1,7 +1,6 @@
 package Actions.initActions;
 
 import Actions.SpawnAction;
-import Objects.Grass;
 import Objects.Herbivore;
 import Simulation.MyMap;
 

@@ -7,7 +7,7 @@ import Simulation.MyMap;
 public class PlaceGrass extends SpawnAction<Grass> {
     public PlaceGrass() {
         super.spawnRate = 0.02; //Процент клеток, заполненных объектом класса, где 100% это все клетки поля
-        super.respawnRate = 0.8; //сколько объектов от общего количества объектов класса должно остаться, чтобы запустить респавн
+        super.respawnRate = 0.8; //сколько объектов от общего количества объектов класса должно остаться, чтобы запустить добавление новых
     }
 
     @Override

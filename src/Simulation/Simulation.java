@@ -20,7 +20,6 @@ import Actions.initActions.PlaceHerbs;
 import Actions.initActions.PlaceObjects;
 import Actions.turnActions.MoveAction;
 import Objects.*;
-
 import java.util.*;
 
 public class Simulation {
