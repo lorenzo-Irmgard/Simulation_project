@@ -3,8 +3,6 @@ package Actions;
 import Objects.Entity;
 import Objects.Position;
 import Simulation.MyMap;
-
-import java.util.AbstractCollection;
 import java.util.Random;
 
 public abstract class SpawnAction <T extends Entity> extends Action {
