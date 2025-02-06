@@ -20,7 +20,7 @@ public class MoveAction extends Action {
             if (!map.contains(oldPos)) continue;
             if (entity instanceof Herbivore || entity instanceof Predator) {
                 Creature creature = (Creature) entity;
-                System.out.println("\n\n\n\n\n");
+                System.out.print("\n\n");
                 System.out.println(creature.printStatus() + " on " + oldPos + " make's move");
                 Position newPos = creature.makeMove(map, oldPos);
                 creature.setHealth(creature.getHealth() - 1);

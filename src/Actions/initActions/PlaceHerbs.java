@@ -1,16 +1,29 @@
 package Actions.initActions;
 
 import Actions.SpawnAction;
+import Objects.Grass;
 import Objects.Herbivore;
 import Simulation.MyMap;
 
-public class PlaceHerbs extends SpawnAction {
+public class PlaceHerbs extends SpawnAction<Herbivore> {
+    public PlaceHerbs() {
+        super.spawnRate = 0.0067; //Процент клеток, заполненных объектом класса, где 100% это все клетки поля
+        super.respawnRate = 0.5; //сколько объектов в процентах от общего количества объектов класса должно остаться, чтобы запустить респавн
+    }
+
     @Override
-    public void operation(MyMap map) {
-        int count = (map.getWIDTH() * map.getHEIGHT()) / 150;
-        for (int i = 0; i < count; i++) {
-            map.addEntity(getValidPosition(map), new Herbivore());
-            map.addHerbsCount();
-        }
+    protected Herbivore createEntity(MyMap map) {
+        map.addHerbsCount();
+        return new Herbivore();
+    }
+
+    @Override
+    protected int EntityCounter(MyMap map) {
+        return map.getHerbsCount();
+    }
+
+    @Override
+    protected void printInfo() {
+        System.out.println("INFO: More herbivores added on the map");
     }
 }

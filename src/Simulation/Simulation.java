@@ -18,9 +18,6 @@ import Actions.initActions.PlacePreds;
 import Actions.initActions.PlaceGrass;
 import Actions.initActions.PlaceHerbs;
 import Actions.initActions.PlaceObjects;
-import Actions.turnActions.AddPreds;
-import Actions.turnActions.AddGrass;
-import Actions.turnActions.AddHerbs;
 import Actions.turnActions.MoveAction;
 import Objects.*;
 
@@ -30,7 +27,7 @@ public class Simulation {
     private static int count = 0;
     private static final Scanner scan = new Scanner(System.in);
     private static MyMap map;
-    private static final List<Action> turnActions = new ArrayList<>();
+    private static final List<Action> Actions = new ArrayList<>();
     public static void main(String[] args) {
         int exitCode = 0;
         while (exitCode != 1) {
@@ -38,11 +35,12 @@ public class Simulation {
             int ans = inputCheck();
             if (count == 0 && ans > 0 && ans < 6) {
                 map = new MyMap();
-                List<Action> initActions = new ArrayList<>();
-                initialize(initActions, turnActions);
-                for(Action act : initActions) {
+                initialize();
+                for(Action act : Actions) {
                     act.operation(map);
                 }
+                Actions.removeFirst();
+                Actions.addFirst(new MoveAction());
             }
             exitCode = menuSelection(ans);
         }
@@ -130,7 +128,7 @@ public class Simulation {
     }
 
     private static void nextTurn() {
-        for(Action act : turnActions) {
+        for(Action act : Actions) {
             act.operation(map);
         }
     }
@@ -152,7 +150,7 @@ public class Simulation {
             System.out.println();
         }
         System.out.println("______________\n|Round||Move |   Herbivores left: " + map.getHerbsCount());
-                System.out.printf("|%-5d||%-5d|   Predators left: %d", count, moveNum, map.getPredsCount());
+                System.out.printf("|%-5d||%-5d|   Predators left: %d\n", count, moveNum, map.getPredsCount());
     }
 
     private static boolean pauseSimulation() {
@@ -173,14 +171,10 @@ public class Simulation {
         }
     }
 
-    private static void initialize(List<Action> initActions, List<Action> turnActions) {
-        initActions.add(new PlaceGrass());
-        initActions.add(new PlaceHerbs());
-        initActions.add(new PlaceObjects());
-        initActions.add(new PlacePreds());
-        turnActions.add(new MoveAction());
-        turnActions.add(new AddHerbs());
-        turnActions.add(new AddGrass());
-        turnActions.add(new AddPreds());
+    private static void initialize() {
+        Actions.add(new PlaceObjects());
+        Actions.add(new PlaceGrass());
+        Actions.add(new PlaceHerbs());
+        Actions.add(new PlacePreds());
     }
 }
